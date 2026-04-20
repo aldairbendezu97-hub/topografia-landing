@@ -122,6 +122,35 @@
       padding: 9px 22px; border-radius: 8px;
       box-shadow: 0 0 16px rgba(0,212,255,.3);
     }
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 40px; height: 40px; cursor: pointer;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px;
+    }
+    .hamburger span {
+      display: block; height: 2px; background: var(--white);
+      border-radius: 2px; transition: var(--trans);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    /* Mobile menu overlay */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 199;
+      background: rgba(8,12,20,.97); backdrop-filter: blur(16px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Montserrat',sans-serif; font-size: 1.5rem; font-weight: 800;
+      color: var(--white); transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--cyan); }
+    .mobile-menu .nav-cta {
+      padding: 14px 36px; font-size: 1rem; border-radius: 10px;
+    }
 
     /* ══════════════════════════════════════════
        HERO
@@ -425,27 +454,45 @@
       .services-grid { grid-template-columns: repeat(2,1fr); }
       .gallery-grid  { grid-template-columns: repeat(2,1fr); }
       .gallery-item.wide { grid-column: span 1; }
+      .gallery-item.tall { grid-row: span 1; }
       .footer-grid   { grid-template-columns: 1fr 1fr; }
     }
     @media(max-width:768px){
-      .hero-inner    { grid-template-columns: 1fr; }
+      .container     { padding: 0 18px; }
+      .section       { padding: 64px 0; }
+      .hero-inner    { grid-template-columns: 1fr; gap: 40px; }
       .hero-mosaic   { display: none; }
+      .hero-title    { font-size: clamp(2rem,8vw,3rem); }
+      .hero-desc     { font-size: 1rem; }
+      .hero-trust    { gap: 18px; margin-top: 36px; padding-top: 28px; flex-wrap: wrap; }
+      .trust-num     { font-size: 1.6rem; }
       .stats-row     { grid-template-columns: repeat(2,1fr); }
       .stat-item:nth-child(2) { border-right: none; }
-      .steps-grid    { grid-template-columns: repeat(2,1fr); }
+      .stat-num      { font-size: 2rem; }
+      .steps-grid    { grid-template-columns: repeat(2,1fr); gap: 32px; }
       .steps-grid::before { display: none; }
       .testi-grid    { grid-template-columns: 1fr; }
       .contact-cards { grid-template-columns: 1fr; }
-      .footer-grid   { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-grid   { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
       .nav-menu      { display: none; }
+      .hamburger     { display: flex; }
+      .logo-img      { height: 60px; max-width: 180px; }
+      .h2            { font-size: clamp(1.6rem,5vw,2.4rem); }
+      .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid  { grid-template-columns: repeat(2,1fr); gap: 10px; }
+      .gallery-item.wide { grid-column: span 1; }
     }
     @media(max-width:480px){
-      .gallery-grid  { grid-template-columns: 1fr; }
-      .gallery-item.tall { grid-row: span 1; }
-      .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid  { grid-template-columns: 1fr; gap: 10px; }
       .stats-row     { grid-template-columns: 1fr; }
-      .stat-item     { border-right: none !important; border-bottom: 1px solid var(--border); }
+      .stat-item     { border-right: none !important; border-bottom: 1px solid var(--border); padding: 16px 0; }
+      .steps-grid    { grid-template-columns: 1fr; }
+      .hero-cta      { flex-direction: column; }
+      .hero-cta .btn { width: 100%; justify-content: center; }
+      .cta-row       { flex-direction: column; align-items: center; }
+      .cta-row .btn  { width: 100%; max-width: 320px; justify-content: center; }
+      .trust-item    { min-width: 80px; }
     }
   </style>
 </head>
@@ -474,9 +521,20 @@
           <li><a href="#process">Proceso</a></li>
           <li><a href="#cta" class="nav-cta">Cotizar Ahora</a></li>
         </ul>
+        <div class="hamburger" id="hamburger" aria-label="Menú">
+          <span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services"  class="mobile-link">Servicios</a>
+    <a href="#portfolio" class="mobile-link">Portafolio</a>
+    <a href="#process"   class="mobile-link">Proceso</a>
+    <a href="#cta"       class="mobile-link nav-cta">Cotizar Ahora</a>
+  </div>
 
   <!-- ── HERO ─────────────────────────────────────────────────── -->
   <section id="hero">
@@ -517,13 +575,13 @@
         <!-- Mosaic -->
         <div class="hero-mosaic">
           <div class="mosaic-img tall">
-            <img src="img/trabajo1.jpeg" alt="Letrero luminoso"/>
+            <img src="img/trabajo8.jpeg" alt="Letrero luminoso"/>
           </div>
           <div class="mosaic-img">
-            <img src="img/trabajo2.jpeg" alt="Trabajo publicidad"/>
+            <img src="img/trabajo9.jpeg" alt="Trabajo publicidad"/>
           </div>
           <div class="mosaic-img">
-            <img src="img/trabajo3.jpeg" alt="Neon"/>
+            <img src="img/trabajo10.jpeg" alt="Neon"/>
           </div>
         </div>
       </div>
@@ -813,6 +871,22 @@
     // ── Navbar scroll
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+    // ── Hamburger menu
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
 
     // ── Counter animation
     function animateCounter(el) {
